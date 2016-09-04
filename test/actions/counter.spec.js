@@ -1,46 +1,11 @@
 import expect from 'expect';
-import { applyMiddleware } from 'redux';
+import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as actions from '../../src/actions/counter';
 
 const middlewares = [thunk];
+const mockStore = configureStore(middlewares);
 
-/*
- * Creates a mock of Redux store with middleware.
- */
-function mockStore(getState, expectedActions, onLastAction) {
-  if (!Array.isArray(expectedActions)) {
-    throw new Error('expectedActions should be an array of expected actions.');
-  }
-  if (typeof onLastAction !== 'undefined' && typeof onLastAction !== 'function') {
-    throw new Error('onLastAction should either be undefined or function.');
-  }
-
-  function mockStoreWithoutMiddleware() {
-    return {
-      getState() {
-        return typeof getState === 'function' ?
-          getState() :
-          getState;
-      },
-
-      dispatch(action) {
-        const expectedAction = expectedActions.shift();
-        expect(action).toEqual(expectedAction);
-        if (onLastAction && !expectedActions.length) {
-          onLastAction();
-        }
-        return action;
-      }
-    };
-  }
-
-  const mockStoreWithMiddleware = applyMiddleware(
-    ...middlewares
-  )(mockStoreWithoutMiddleware);
-
-  return mockStoreWithMiddleware();
-}
 
 describe('actions', () => {
   describe('counter', () => {
@@ -52,30 +17,35 @@ describe('actions', () => {
       expect(actions.decrement()).toEqual({ type: actions.DECREMENT_COUNTER });
     });
 
-    it('incrementIfOdd should create increment action', (done) => {
+    it('incrementIfOdd should create increment action', () => {
       const expectedActions = [
         { type: actions.INCREMENT_COUNTER }
       ];
       const getState = { reduxAsyncConnect: { counter: { value: 1 } } };
-      const store = mockStore(getState, expectedActions, done);
+      const store = mockStore(getState);
       store.dispatch(actions.incrementIfOdd());
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('incrementIfOdd shouldnt create increment action if counter is even', (done) => {
+    it('incrementIfOdd shouldnt create increment action if counter is even', () => {
       const expectedActions = [];
       const getState = { reduxAsyncConnect: { counter: { value: 2 } } };
-      const store = mockStore(getState, expectedActions);
+      const store = mockStore(getState);
       store.dispatch(actions.incrementIfOdd());
-      done();
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('incrementAsync should create increment action', (done) => {
+    it('incrementAsync should create increment action', done => {
       const expectedActions = [
         { type: actions.INCREMENT_COUNTER }
       ];
       const getState = { reduxAsyncConnect: { counter: { value: 0 } } };
-      const store = mockStore(getState, expectedActions, done);
+      const store = mockStore(getState);
       store.dispatch(actions.incrementAsync(100));
+      setTimeout(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+        done();
+      }, 100);
     });
   });
 });

@@ -1,20 +1,21 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import { IndexLink, browserHistory } from 'react-router';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
+import { Spin } from '../../components';
 import config from '../../config';
 import { logout } from '../../actions/auth';
 
 @connect(
-  state => ({ reduxAsyncConnect: state.reduxAsyncConnect }),
+  state => ({ user: state.reduxAsyncConnect.user }),
   { logout }
 )
 class Main extends Component {
   static propTypes = {
     children: PropTypes.any.isRequired,
-    reduxAsyncConnect: PropTypes.object.isRequired,
+    user: PropTypes.object,
     logout: PropTypes.func.isRequired
   };
 
@@ -24,8 +25,8 @@ class Main extends Component {
   };
 
   render() {
-    const styles = require('./Main.scss');
-    const { user, loaded } = this.props.reduxAsyncConnect;
+    require('./Main.scss');
+    const user = this.props.user;
     return (
       <div>
         <Helmet {...config.app.head}/>
@@ -72,11 +73,7 @@ class Main extends Component {
           </Navbar.Collapse>
         </Navbar>
 
-        <div className={styles.spin}>
-          {loaded || (
-            <i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-          )}
-        </div>
+        <Spin />
 
         <div>
           {/* this will render the child routes */}

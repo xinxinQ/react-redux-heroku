@@ -15,7 +15,7 @@ import { logout } from '../../actions/auth';
 class Main extends Component {
   static propTypes = {
     children: PropTypes.any.isRequired,
-    user: PropTypes.object,
+    user: PropTypes.any,
     logout: PropTypes.func.isRequired
   };
 

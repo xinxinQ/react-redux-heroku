@@ -10,7 +10,7 @@ export default class Home extends Component { // eslint-disable-line
         <Helmet title="主页"/>
         <Jumbotron>
           <div className="container">
-            <h1>React与Redux开发实例精解</h1>
+            <h1>React Redux Book</h1>
             <p>学习使用React与Redux搭建Universal应用</p>
             <p>
               <LinkContainer to="/login">

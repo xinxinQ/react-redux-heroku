@@ -4,14 +4,14 @@ module.exports = {
   apiHost: process.env.APIHOST || 'localhost',
   apiPort: process.env.APIPORT || 3030,
   app: {
-    title: 'React与Redux开发实例精解',
-    description: 'React与Redux开发实例精解',
+    title: 'React Redux Book',
+    description: 'React Redux Book Example',
     head: {
-      titleTemplate: 'React与Redux开发实例精解: %s',
+      titleTemplate: 'React Redux Book: %s',
       meta: [
         {
           name: 'description',
-          content: 'React与Redux开发实例精解'
+          content: 'React Redux Book Example'
         },
         { charset: 'utf-8' }
       ]

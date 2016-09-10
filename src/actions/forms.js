@@ -13,7 +13,7 @@ export function post(data) {
   return {
     [ASYNC]: {
       key,
-      promise: customFetch('/forms', option)
+      promise: () => customFetch('/forms', option)
     }
   };
 }

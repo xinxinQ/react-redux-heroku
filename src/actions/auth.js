@@ -11,7 +11,7 @@ export function loadAuth() {
   return {
     [ASYNC]: {
       key: 'user',
-      promise: customFetch('/loadAuth')
+      promise: () => customFetch('/loadAuth')
     }
   };
 }
@@ -40,7 +40,7 @@ export function login(name) {
   return {
     [ASYNC]: {
       key: 'user',
-      promise: customFetch(url, option)
+      promise: () => customFetch(url, option)
     }
   };
 }
@@ -49,7 +49,7 @@ export function logout() {
   return {
     [ASYNC]: {
       key: 'user',
-      promise: customFetch('/logout')
+      promise: () => customFetch('/logout')
     }
   };
 }

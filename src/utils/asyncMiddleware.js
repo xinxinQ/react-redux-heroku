@@ -4,7 +4,7 @@ import {
 } from 'redux-connect/lib/store';
 export const ASYNC = Symbol('async middleware');
 
-export default () => next => action => {
+export default store => next => action => {
   if (typeof action[ASYNC] === 'undefined') {
     return next(action);
   }
@@ -13,7 +13,7 @@ export default () => next => action => {
   next(beginGlobalLoad());
   next(load(key));
 
-  return promise
+  return promise({ store })
     .then(data => next(loadSuccess(key, data)))
     .catch(error => next(loadFail(key, error)))
     .then(result => {

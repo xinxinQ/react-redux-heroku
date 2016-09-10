@@ -39,7 +39,7 @@ export function load() {
   return {
     [ASYNC]: {
       key: 'counter',
-      promise: customFetch('/counter')
+      promise: () => customFetch('/counter')
     }
   };
 }

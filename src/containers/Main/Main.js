@@ -67,7 +67,6 @@ class Main extends Component {
                     <MenuItem eventKey={5.1} onClick={this.handleLogout}>登出</MenuItem>
                   </LinkContainer>
                 </NavDropdown>
-
               )}
             </Nav>
           </Navbar.Collapse>

@@ -13,7 +13,6 @@ before(done => {
     require('../../webpack/webpack-isomorphic-tools'))
     .development()
     .server(path.resolve(__dirname, '..', '..'), done);
-  console.log(12312312312312);
 });
 
 function setup(counter = 0) {

@@ -9,7 +9,7 @@ import config from '../../config';
 import { logout } from '../../actions/auth';
 
 @connect(
-  state => ({ user: state.reduxAsyncConnect.user }),
+  state => ({ user: state.async.user }),
   { logout }
 )
 class Main extends Component {

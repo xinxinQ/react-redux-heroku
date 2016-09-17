@@ -4,8 +4,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import configureStore from './utils/configureStore';
 
-import { Router, browserHistory, match } from 'react-router';
-import { ReduxAsyncConnect } from 'redux-connect';
+import { match, Router, browserHistory } from 'react-router';
 
 import getRoutes from './routes';
 
@@ -21,17 +20,13 @@ match({ history, routes }, (err, redirect, renderProps) => {
     history.replace(redirect);
   } else if (err) {
     history.goBack();
-    console.error(err.toString());
+    console.error(err.stack);
   } else {
     render(
       <Provider store={store}>
-        <Router
-          {...renderProps}
-          render={(props) => <ReduxAsyncConnect {...props}/>}
-        />
+        <Router {...renderProps} />
       </Provider>,
       rootElement
     );
   }
 });
-

@@ -11,18 +11,22 @@ import {
 } from '../../components';
 
 @connect(
-  state => ({ reduxAsyncConnect: state.reduxAsyncConnect }),
+  state => ({
+    forms: state.async.forms,
+    formsState: state.async.loadState && state.async.loadState.forms
+  }),
   ActionCreators
 )
 class Forms extends Component {//eslint-disable-line
   static propTypes = {
-    reduxAsyncConnect: PropTypes.object.isRequired,
+    forms: PropTypes.any,
+    formsState: PropTypes.any,
     post: PropTypes.func.isRequired
   };
 
   render() {
     const styles = require('./Forms.scss');
-    const { post, reduxAsyncConnect } = this.props;
+    const { forms, formsState, post } = this.props;
     return (
       <div className={styles.forms}>
         <Helmet title="表单"/>
@@ -46,10 +50,10 @@ class Forms extends Component {//eslint-disable-line
               <br/><br/>
               <Row className="container-fluid">
                 表单提交后的响应结果：
-                <pre>{serialize(reduxAsyncConnect.forms, { space: 4 })}</pre>
+                <pre>{serialize(forms, { space: 2 })}</pre>
                 <br/><br/>
                 表单提交后的响应状态：
-                <pre>{serialize(reduxAsyncConnect.loadState.forms, { space: 4 })}</pre>
+                <pre>{serialize(formsState, { space: 2 })}</pre>
               </Row>
             </Col>
           </Row>

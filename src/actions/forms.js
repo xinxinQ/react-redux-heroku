@@ -1,4 +1,4 @@
-import { ASYNC } from '../utils/asyncMiddleware';
+import { ASYNC } from 'redux-amr';
 import { customFetch } from '../utils/utils';
 
 export function post(data) {

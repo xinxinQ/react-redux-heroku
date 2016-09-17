@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import * as authActions from '../../actions/auth';
 
 @connect(
-  state => ({ user: state.reduxAsyncConnect.user }),
+  state => ({ user: state.async.user }),
   authActions
 )
 export default class Login extends Component {

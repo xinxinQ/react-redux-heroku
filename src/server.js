@@ -6,8 +6,7 @@ import compression from 'compression';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
-import { match } from 'react-router';
-import { ReduxAsyncConnect, loadOnServer } from 'redux-connect';
+import { match, RouterContext } from 'react-router';
 import configureStore from './utils/configureStore';
 import getRoutes from './routes';
 import Html from './utils/Html';
@@ -34,9 +33,8 @@ app.use((req, res) => {
   if (process.env.NODE_ENV !== 'production') {
     webpackIsomorphicTools.refresh();
   }
-  const initialState = {};
-  const store = configureStore(initialState);
 
+  const store = configureStore();
   const routes = getRoutes(store);
 
   function hydrateOnClient() {
@@ -57,23 +55,16 @@ app.use((req, res) => {
       hydrateOnClient();
       console.error('ROUTER ERROR:', err.stack);
     } else if (renderProps) {
-      loadOnServer({ ...renderProps, store })
-        .then(() => {
-          res.status(200);
-          const component = (
-            <Provider store={store}>
-              <ReduxAsyncConnect {...renderProps} />
-            </Provider>
-          );
-          res.send('<!doctype html>\n' +
-            renderToString(
-              <Html assets={webpackIsomorphicTools.assets()} component={component} store={store}/>)
-          );
-        })
-        .catch(error => {
-          res.status(500).send('Internal Server Error');
-          console.error('MOUNT ERROR:', error.stack);
-        });
+      res.status(200);
+      const component = (
+        <Provider store={store}>
+          <RouterContext {...renderProps} />
+        </Provider>
+      );
+      res.send('<!doctype html>\n' +
+        renderToString(
+          <Html assets={webpackIsomorphicTools.assets()} component={component} store={store}/>)
+      );
     } else {
       res.status(404).send('Not found');
     }

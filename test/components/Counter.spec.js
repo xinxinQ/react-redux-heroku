@@ -10,9 +10,10 @@ before(done => {
   }
   const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
   global.webpackIsomorphicTools = new WebpackIsomorphicTools(
-    require('../../../webpack/webpack-isomorphic-tools'))
+    require('../../webpack/webpack-isomorphic-tools'))
     .development()
-    .server(path.resolve(__dirname, '..', '..', '..'), done);
+    .server(path.resolve(__dirname, '..', '..'), done);
+  console.log(12312312312312);
 });
 
 function setup(counter = 0) {
@@ -21,9 +22,9 @@ function setup(counter = 0) {
     incrementIfOdd: expect.createSpy(),
     incrementAsync: expect.createSpy(),
     decrement: expect.createSpy(),
-    load: expect.createSpy()
+    loadCounter: expect.createSpy()
   };
-  const Counter = require('../../../src/containers/Counter/Counter').Counter;
+  const Counter = require('../../src/containers/Counter/Counter').Counter;
   const component = mount(
     <Counter counter={{ value: counter }} counterLoadState={{ loaded: true }} {...actions} />
   );
@@ -35,7 +36,7 @@ function setup(counter = 0) {
   };
 }
 
-describe('containers', () => {
+describe('components', () => {
   describe('Counter', () => {
     it('first button should call increment', () => {
       const { buttons, actions } = setup();
@@ -64,7 +65,7 @@ describe('containers', () => {
     it('fifth button should call load', () => {
       const { buttons, actions } = setup();
       buttons.at(4).simulate('click');
-      expect(actions.load).toHaveBeenCalled();
+      expect(actions.loadCounter).toHaveBeenCalled();
     });
   });
 });

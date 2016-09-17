@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import { asyncConnect } from 'redux-connect';
-import { customFetch } from '../../utils/utils';
+import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Helmet from 'react-helmet';
 import { Line, Column, Table } from '../../components';
 
-@asyncConnect(
-  [
-    {
-      key: 'statistic',
-      promise: () => customFetch('/statistic')
-    }
-  ]
+@connect(
+  state => ({ statistic: state.async.statistic })
 )
 class Statistic extends Component { // eslint-disable-line
   render() {

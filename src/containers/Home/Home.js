@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { Jumbotron, Button } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
 
 export default class Home extends Component { // eslint-disable-line
   render() {
@@ -12,11 +11,7 @@ export default class Home extends Component { // eslint-disable-line
           <div className="container">
             <h1>React Redux Book</h1>
             <p>学习使用React与Redux搭建Universal应用</p>
-            <p>
-              <LinkContainer to="/login">
-                <Button bsStyle="primary">了解更多</Button>
-              </LinkContainer>
-            </p>
+            <p><Button bsStyle="primary">了解更多</Button></p>
           </div>
         </Jumbotron>
         <div className="container">

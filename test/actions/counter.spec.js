@@ -21,7 +21,7 @@ describe('actions', () => {
       const expectedActions = [
         { type: actions.INCREMENT_COUNTER }
       ];
-      const getState = { reduxAsyncConnect: { counter: { value: 1 } } };
+      const getState = { async: { counter: { value: 1 } } };
       const store = mockStore(getState);
       store.dispatch(actions.incrementIfOdd());
       expect(store.getActions()).toEqual(expectedActions);
@@ -29,7 +29,7 @@ describe('actions', () => {
 
     it('incrementIfOdd shouldnt create increment action if counter is even', () => {
       const expectedActions = [];
-      const getState = { reduxAsyncConnect: { counter: { value: 2 } } };
+      const getState = { async: { counter: { value: 2 } } };
       const store = mockStore(getState);
       store.dispatch(actions.incrementIfOdd());
       expect(store.getActions()).toEqual(expectedActions);
@@ -39,7 +39,7 @@ describe('actions', () => {
       const expectedActions = [
         { type: actions.INCREMENT_COUNTER }
       ];
-      const getState = { reduxAsyncConnect: { counter: { value: 0 } } };
+      const getState = { async: { counter: { value: 0 } } };
       const store = mockStore(getState);
       store.dispatch(actions.incrementAsync(100));
       setTimeout(() => {

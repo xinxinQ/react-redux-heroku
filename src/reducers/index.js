@@ -1,10 +1,10 @@
 import { combineReducers, compose } from 'redux';
-import { reducer as reduxAsyncConnect } from 'redux-connect';
+import { reducer as asyncReducer } from 'redux-amr';
 import { reducer as formReducer } from 'redux-form';
 import counter from './counter';
 
 const rootReducer = combineReducers({
-  reduxAsyncConnect: compose(counter)(reduxAsyncConnect),
+  async: compose(counter)(asyncReducer),
   form: formReducer
 });
 

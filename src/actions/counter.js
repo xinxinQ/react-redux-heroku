@@ -1,4 +1,4 @@
-import { ASYNC } from '../utils/asyncMiddleware';
+import { ASYNC } from 'redux-amr';
 import { customFetch } from '../utils/utils';
 export const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
 export const DECREMENT_COUNTER = 'DECREMENT_COUNTER';
@@ -17,9 +17,9 @@ export function decrement() {
 
 export function incrementIfOdd() {
   return (dispatch, getState) => {
-    const { reduxAsyncConnect } = getState();
+    const { async } = getState();
 
-    if (reduxAsyncConnect.counter.value % 2 === 0) {
+    if (async.counter.value % 2 === 0) {
       return;
     }
 
@@ -35,7 +35,7 @@ export function incrementAsync(delay = 1000) {
   };
 }
 
-export function load() {
+export function loadCounter() {
   return {
     [ASYNC]: {
       key: 'counter',

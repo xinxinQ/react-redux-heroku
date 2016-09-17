@@ -36,8 +36,5 @@ export function customFetch(url, option) {
 
   return fetch(prefix + url, opt)
     .then(handle401)
-    .then(handleErrors)
-    .catch(err => {
-      throw err.toString();
-    });
+    .then(handleErrors);
 }

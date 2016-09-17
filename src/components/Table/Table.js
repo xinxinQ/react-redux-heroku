@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import Griddle from 'griddle-react';
 import CustomPagerComponent from './CustomPagerComponent';
-require('./Table.scss');
 
 const customComponent = props => (<div>{props.data + '°C'}</div>);
 
@@ -10,6 +9,7 @@ customComponent.propTypes = {
 };
 
 function Table(props) {
+  require('./Table.scss');
   if (!props.statistic) return <p>数据异常</p>;
   const columnMetadata = [
     {

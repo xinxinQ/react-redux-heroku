@@ -1,8 +1,7 @@
-import React, { Component, PropTypes } from 'react';
-import { reduxForm } from 'redux-form';
+/* eslint-disable react/prop-types */
+import React from 'react';
+import { Field, reduxForm } from 'redux-form';
 import { FormGroup, ControlLabel, FormControl, Button, ButtonToolbar } from 'react-bootstrap';
-
-export const fields = ['username', 'password'];
 
 const validate = values => {
   const errors = {};
@@ -26,78 +25,48 @@ const asyncValidate = (values/* , dispatch */) =>
     }, 1000); // simulate server latency
   });
 
-class AsynchronousBlurValidationForm extends Component { //eslint-disable-line
-  render() {
-    const {
-      asyncValidating, fields: { username, password },
-      resetForm, handleSubmit, submitting
-    } = this.props;
-    return (
-      <form onSubmit={handleSubmit}>
-        <FormGroup
-          controlId="username1"
-          validationState={username.error && username.touched ? 'error' : null}
-        >
-          <ControlLabel>Username</ControlLabel>
-          <FormControl
-            type="text"
-            placeholder="Username"
-            name="username"
-            {...username}
-          />
-          <FormControl.Feedback>
-            <span>
-              {asyncValidating === 'username' && <i className="fa fa-cog fa-spin fa-fw"/>}
-            </span>
-          </FormControl.Feedback>
-          {username.touched && username.error &&
-          (<div className="text-danger">{username.error}</div>)}
-        </FormGroup>
+const renderField = ({ input, label, type, meta: { asyncValidating, touched, error } }) => (
+  <FormGroup
+    controlId={input.name}
+    validationState={error && touched ? 'error' : null}
+  >
+    <ControlLabel>{label}</ControlLabel>
+    <FormControl
+      type={type}
+      placeholder={label}
+      {...input}
+    />
+    <FormControl.Feedback>
+      <span>
+        {asyncValidating && <i className="fa fa-cog fa-spin fa-fw"/>}
+      </span>
+    </FormControl.Feedback>
+    {touched && error &&
+    (<div className="text-danger">{error}</div>)}
+  </FormGroup>
+);
 
-        <FormGroup
-          controlId="password"
-          validationState={password.error && password.touched ? 'error' : null}
-        >
-          <ControlLabel>Password</ControlLabel>
-          <FormControl
-            type="password"
-            placeholder="Password"
-            name="password"
-            {...password}
-          />
-          {password.touched && password.error &&
-          (<div className="text-danger">{password.error}</div>)}
-        </FormGroup>
-
-        <ButtonToolbar>
-          <Button bsStyle="primary" type="submit" disabled={submitting}>
-            {submitting ? <i /> : <i />} Sign Up
-          </Button>
-          <Button type="button" disabled={submitting} onClick={resetForm}>
-            Clear Values
-          </Button>
-        </ButtonToolbar>
-      </form>
-    );
-  }
-}
-
-AsynchronousBlurValidationForm.propTypes = {
-  asyncValidating: PropTypes.oneOfType([
-    PropTypes.string.isRequired,
-    PropTypes.bool.isRequired
-  ]),
-  fields: PropTypes.object.isRequired,
-  resetForm: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired
+const AsyncValidationForm = (props) => {
+  const { handleSubmit, pristine, reset, submitting } = props
+  return (
+    <form onSubmit={handleSubmit}>
+      <Field name="username" type="text" component={renderField} label="Username"/>
+      <Field name="password" type="password" component={renderField} label="Password"/>
+      <ButtonToolbar>
+        <Button bsStyle="primary" type="submit" disabled={submitting}>
+          {submitting ? <i /> : <i />} Sign Up
+        </Button>
+        <Button type="button" disabled={pristine || submitting} onClick={reset}>
+          Clear Values
+        </Button>
+      </ButtonToolbar>
+    </form>
+  );
 };
 
-
 export default reduxForm({
-  form: 'asynchronousBlurValidation',
-  fields,
+  form: 'asyncValidation', // a unique identifier for this form
+  validate,
   asyncValidate,
-  asyncBlurFields: ['username'],
-  validate
-})(AsynchronousBlurValidationForm);
+  asyncBlurFields: ['username']
+})(AsyncValidationForm)

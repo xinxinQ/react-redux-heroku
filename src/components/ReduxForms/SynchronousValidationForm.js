@@ -1,8 +1,7 @@
-import React, { Component, PropTypes } from 'react';
-import { reduxForm } from 'redux-form';
+/* eslint-disable react/prop-types */
+import React from 'react';
+import { Field, reduxForm } from 'redux-form';
 import { FormGroup, ControlLabel, FormControl, Button, ButtonToolbar } from 'react-bootstrap';
-
-export const fields = ['username', 'email'];
 
 const validate = values => {
   const errors = {};
@@ -16,66 +15,47 @@ const validate = values => {
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
     errors.email = 'Invalid email address';
   }
+  if (!values.age) {
+    errors.age = 'Required';
+  } else if (isNaN(Number(values.age))) {
+    errors.age = 'Must be a number';
+  } else if (Number(values.age) < 18) {
+    errors.age = 'Sorry, you must be at least 18 years old';
+  }
   return errors;
 };
 
-class SynchronousValidationForm extends Component { //eslint-disable-line
-  render() {
-    const { fields: { username, email }, resetForm, handleSubmit, submitting } = this.props;
-    return (
-      <form onSubmit={handleSubmit}>
-        <FormGroup
-          controlId="username"
-          validationState={username.error && username.touched ? 'error' : null}
-        >
-          <ControlLabel>Username</ControlLabel>
-          <FormControl
-            type="text"
-            placeholder="Username"
-            name="username"
-            {...username}
-          />
-          {username.touched && username.error &&
-          (<div className="text-danger">{username.error}</div>)}
-        </FormGroup>
+const renderField = ({ input, label, type, meta: { touched, error } }) => (
+  <FormGroup
+    controlId={input.name}
+    validationState={error && touched ? 'error' : null}
+  >
+    <ControlLabel>{label}</ControlLabel>
+    <FormControl {...input} placeholder={label} type={type}/>
+    {touched && error && <div className="text-danger">{error}</div>}
+  </FormGroup>
+);
 
-        <FormGroup
-          controlId="email1"
-          validationState={email.error && email.touched ? 'error' : null}
-        >
-          <ControlLabel>Email</ControlLabel>
-          <FormControl
-            type="text"
-            placeholder="Email"
-            name="email"
-            {...email}
-          />
-          {email.touched && email.error && <div className="text-danger">{email.error}</div>}
-        </FormGroup>
-
-        <ButtonToolbar>
-          <Button bsStyle="primary" type="submit" disabled={submitting}>
-            {submitting ? <i /> : <i />} Submit
-          </Button>
-          <Button type="button" disabled={submitting} onClick={resetForm}>
-            Clear Values
-          </Button>
-        </ButtonToolbar>
-      </form>
-
-    );
-  }
-}
-
-SynchronousValidationForm.propTypes = {
-  fields: PropTypes.object.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  resetForm: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired
+const SyncValidationForm = (props) => {
+  const { handleSubmit, pristine, reset, submitting } = props;
+  return (
+    <form onSubmit={handleSubmit}>
+      <Field name="username" type="text" component={renderField} label="Username"/>
+      <Field name="email" type="email" component={renderField} label="Email"/>
+      <Field name="age" type="number" component={renderField} label="Age"/>
+      <ButtonToolbar>
+        <Button bsStyle="primary" type="submit" disabled={submitting}>
+          {submitting ? <i /> : <i />} Submit
+        </Button>
+        <Button type="button" disabled={pristine || submitting} onClick={reset}>
+          Clear Values
+        </Button>
+      </ButtonToolbar>
+    </form>
+  );
 };
 
 export default reduxForm({
-  form: 'synchronousValidation',
-  fields,
-  validate
-})(SynchronousValidationForm);
+  form: 'syncValidation',  // a unique identifier for this form
+  validate                 // <--- validation function given to redux-form
+})(SyncValidationForm);

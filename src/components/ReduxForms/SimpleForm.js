@@ -1,103 +1,87 @@
-import React, { Component, PropTypes } from 'react';
-import { reduxForm } from 'redux-form';
+/* eslint-disable react/prop-types */
+import React from 'react';
+import { Field, reduxForm } from 'redux-form';
 import {
   FormGroup, ControlLabel, FormControl,
   Button, ButtonToolbar, Radio, Checkbox
 } from 'react-bootstrap';
 
-export const fields =
-  ['firstName', 'lastName', 'email', 'sex', 'favoriteColor', 'employed', 'notes'];
+const renderInput = ({ input, label, type }) => (
+  <FormGroup controlId={input.name}>
+    <ControlLabel>{label}</ControlLabel>
+    <FormControl {...input} placeholder={label} type={type}/>
+  </FormGroup>
+);
 
-class SimpleForm extends Component { //eslint-disable-line
-  render() {
-    const {
-      fields: { firstName, lastName, email, sex, favoriteColor, employed, notes },
-      handleSubmit,
-      resetForm,
-      submitting
-    } = this.props;
-    return (
-      <form onSubmit={handleSubmit}>
-        <FormGroup controlId="fistname">
-          <ControlLabel>First Name</ControlLabel>
-          <FormControl type="text" placeholder="First Name" {...firstName}/>
-        </FormGroup>
+const renderRadio = ({ input, label }) => (
+  <Radio inline {...input} >{label}</Radio>
+);
 
-        <FormGroup controlId="lastname">
-          <ControlLabel>Last Name</ControlLabel>
-          <FormControl type="text" placeholder="Last Name" {...lastName}/>
-        </FormGroup>
+const renderCheckbox = ({ input, label }) => (
+  <FormGroup>
+    <Checkbox inline {...input}>{label}</Checkbox>
+  </FormGroup>
+);
 
-        <FormGroup controlId="email">
-          <ControlLabel>Email</ControlLabel>
-          <FormControl type="text" placeholder="Email" {...email}/>
-        </FormGroup>
+const renderSelect = ({ input, label, children }) => (
+  <FormGroup controlId={input.name}>
+    <ControlLabel>{label}</ControlLabel>
+    <FormControl
+      componentClass="select"
+      {...input}
+    >
+      {children}
+    </FormControl>
+  </FormGroup>
+);
 
-        <FormGroup>
-          <Radio inline {...sex} value="male" checked={sex.value === 'male'}>
-            Male
-          </Radio>
-          <Radio inline {...sex} value="female" checked={sex.value === 'female'}>
-            Female
-          </Radio>
-        </FormGroup>
+const renderTextarea = ({ input, label }) => (
+  <FormGroup controlId={input.name}>
+    <ControlLabel>{label}</ControlLabel>
+    <FormControl
+      componentClass="textarea"
+      placeholder={label}
+      {...input}
+    />
+  </FormGroup>
+);
 
-        <FormGroup controlId="formControlsSelect">
-          <ControlLabel>Favorite Color</ControlLabel>
-          <FormControl
-            componentClass="select"
-            {...favoriteColor}
-            // required syntax for reset form to work
-            // undefined will not change value to first empty option
-            // when resetting
-            value={favoriteColor.value || ''}
-          >
-            <option></option>
-            <option value="ff0000">Red</option>
-            <option value="00ff00">Green</option>
-            <option value="0000ff">Blue</option>
-          </FormControl>
-        </FormGroup>
 
-        <FormGroup>
-          <Checkbox inline {...employed}>
-            Employed
-          </Checkbox>
-        </FormGroup>
+const SimpleForm = (props) => {
+  const { handleSubmit, pristine, reset, submitting } = props;
+  return (
+    <form onSubmit={handleSubmit}>
+      <Field name="firstName" component={renderInput} type="text" label="First Name"/>
+      <Field name="lastName" component={renderInput} type="text" label="Last Name"/>
+      <Field name="email" component={renderInput} type="email" label="Email"/>
+      <FormGroup>
+        <Field name="sex" component={renderRadio} type="radio" value="male" label="Male"/>
+        <Field name="sex" component={renderRadio} type="radio" value="female" label="Female"/>
+      </FormGroup>
 
-        <FormGroup controlId="notes">
-          <ControlLabel>Notes</ControlLabel>
-          <FormControl
-            componentClass="textarea"
-            placeholder="Notes"
-            {...notes}
-            // required for reset form to work (only on textarea's)
-            // see: https://github.com/facebook/react/issues/2533
-            value={notes.value || ''}
-          />
-        </FormGroup>
+      <Field name="favoriteColor" component={renderSelect} label="Favorite Color">
+        <option></option>
+        <option value="ff0000">Red</option>
+        <option value="00ff00">Green</option>
+        <option value="0000ff">Blue</option>
+      </Field>
 
-        <ButtonToolbar>
-          <Button type="submit" bsStyle="primary" disabled={submitting}>
-            {submitting ? <i /> : <i />} Submit
-          </Button>
-          <Button disabled={submitting} onClick={resetForm}>
-            Clear Values
-          </Button>
-        </ButtonToolbar>
-      </form>
-    );
-  }
-}
+      <Field name="employed" component={renderCheckbox} type="checkbox" label="Employed"/>
 
-SimpleForm.propTypes = {
-  fields: PropTypes.object.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  resetForm: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired
+      <Field name="notes" component={renderTextarea} type="textarea" label="Notes"/>
+
+      <ButtonToolbar>
+        <Button type="submit" bsStyle="primary" disabled={pristine || submitting}>
+          {submitting ? <i /> : <i />} Submit
+        </Button>
+        <Button disabled={pristine || submitting} onClick={reset}>
+          Clear Values
+        </Button>
+      </ButtonToolbar>
+    </form>
+  );
 };
 
 export default reduxForm({
-  form: 'simple',
-  fields
+  form: 'simple'  // a unique identifier for this form
 })(SimpleForm);

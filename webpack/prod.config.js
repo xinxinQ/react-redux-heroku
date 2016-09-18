@@ -23,9 +23,9 @@ module.exports = {
   },
   progress: true,
   plugins: [
-    new ExtractTextPlugin('[name]-[chunkhash].css', { allChunks: true }),
+    new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true }),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
@@ -44,22 +44,21 @@ module.exports = {
       { test: /\.(jpeg|jpg|png|gif)$/, loader: 'url-loader?limit=10240' },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract(
-          'style',
-          'css?modules&importLoaders=1&localIdentName=[name]__[local]__[hash:base64:5]' +
-          'postcss'
-        )
+        loader: ExtractTextPlugin.extract({
+          fallbackLoader: 'style',
+          loader: 'css?modules&importLoaders=1&localIdentName=[name]__[local]__[hash:base64:5]' +
+          '!postcss',
+        })
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract(
-          'style',
-          'css?modules&importLoaders=2&localIdentName=[name]__[local]__[hash:base64:5]' +
-          'postcss' +
-          '!sass'
-        )
+        loader: ExtractTextPlugin.extract({
+          fallbackLoader: 'style',
+          loader: 'css?modules&importLoaders=2&localIdentName=[name]__[local]__[hash:base64:5]' +
+          '!postcss' +
+          '!sass',
+        })
       },
-
       {
         test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: "url"

@@ -47,7 +47,7 @@ const renderField = ({ input, label, type, meta: { asyncValidating, touched, err
 );
 
 const AsyncValidationForm = (props) => {
-  const { handleSubmit, pristine, reset, submitting } = props
+  const { handleSubmit, pristine, reset, submitting } = props;
   return (
     <form onSubmit={handleSubmit}>
       <Field name="username" type="text" component={renderField} label="Username"/>
@@ -69,4 +69,4 @@ export default reduxForm({
   validate,
   asyncValidate,
   asyncBlurFields: ['username']
-})(AsyncValidationForm)
+})(AsyncValidationForm);
